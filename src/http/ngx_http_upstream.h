@@ -324,12 +324,12 @@ struct ngx_http_upstream_s {
 
     ngx_event_pipe_t                *pipe;
 
-    ngx_chain_t                     *request_bufs;
+    ngx_chain_t                     *request_bufs;//request that will be send to upstream server
 
     ngx_output_chain_ctx_t           output;
     ngx_chain_writer_ctx_t           writer;
 
-    ngx_http_upstream_conf_t        *conf;
+    ngx_http_upstream_conf_t        *conf;//upstream's conf
     ngx_http_upstream_srv_conf_t    *upstream;
 #if (NGX_HTTP_CACHE)
     ngx_array_t                     *caches;
@@ -337,11 +337,11 @@ struct ngx_http_upstream_s {
 
     ngx_http_upstream_headers_in_t   headers_in;
 
-    ngx_http_upstream_resolved_t    *resolved;
+    ngx_http_upstream_resolved_t    *resolved;//specify upstream server address
 
     ngx_buf_t                        from_client;
 
-    ngx_buf_t                        buffer;
+    ngx_buf_t                        buffer;//store response message from upstream server, and will be send to downstream clients later
     off_t                            length;
 
     ngx_chain_t                     *out_bufs;
@@ -351,20 +351,17 @@ struct ngx_http_upstream_s {
     ngx_int_t                      (*input_filter_init)(void *data);
     ngx_int_t                      (*input_filter)(void *data, ssize_t bytes);
     void                            *input_filter_ctx;
+    ngx_int_t                      (*reinit_request)(ngx_http_request_t *r);
+    void                           (*abort_request)(ngx_http_request_t *r);
+    ngx_int_t                      (*rewrite_redirect)(ngx_http_request_t *r, ngx_table_elt_t *h, size_t prefix);
 
 #if (NGX_HTTP_CACHE)
     ngx_int_t                      (*create_key)(ngx_http_request_t *r);
 #endif
-    ngx_int_t                      (*create_request)(ngx_http_request_t *r);
-    ngx_int_t                      (*reinit_request)(ngx_http_request_t *r);
-    ngx_int_t                      (*process_header)(ngx_http_request_t *r);
-    void                           (*abort_request)(ngx_http_request_t *r);
-    void                           (*finalize_request)(ngx_http_request_t *r,
-                                         ngx_int_t rc);
-    ngx_int_t                      (*rewrite_redirect)(ngx_http_request_t *r,
-                                         ngx_table_elt_t *h, size_t prefix);
-    ngx_int_t                      (*rewrite_cookie)(ngx_http_request_t *r,
-                                         ngx_table_elt_t *h);
+    ngx_int_t                      (*create_request)(ngx_http_request_t *r);//create request which will be send to the upstream server
+    ngx_int_t                      (*process_header)(ngx_http_request_t *r);//will be invoked after receiving responses from upstream server, the return value: NGX_AGAIN(the response is not done) or other
+    void                           (*finalize_request)(ngx_http_request_t *r, ngx_int_t rc); //free request to the upstream server
+    ngx_int_t                      (*rewrite_cookie)(ngx_http_request_t *r, ngx_table_elt_t *h);
 
     ngx_msec_t                       start_time;
 
@@ -388,7 +385,7 @@ struct ngx_http_upstream_s {
     unsigned                         cache_status:3;
 #endif
 
-    unsigned                         buffering:1;
+    unsigned                         buffering:1;//!if using more buffers or file bufs to transfer data with upstream server or only use [buffer]
     unsigned                         keepalive:1;
     unsigned                         upgrade:1;
 
