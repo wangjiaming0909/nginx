@@ -258,7 +258,7 @@ main(int argc, char *const *argv)
         return 1;
     }
 
-    if (ngx_process_options(&init_cycle) != NGX_OK) {
+    if (ngx_process_options(&init_cycle) != NGX_OK) { // 感觉只是处理命令行选项的conf file信息
         return 1;
     }
 
