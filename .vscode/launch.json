@@ -9,7 +9,7 @@
         "name": "(gdb) Attach",
         "type": "cppdbg",
         "request": "attach",
-        "program": "${workspaceFolder}/build/sbin/nginx",
+        "program": "~/nginx/sbin/nginx",
         "processId": "${command:pickProcess}",
         "MIMode": "gdb",
         "setupCommands": [
@@ -24,7 +24,7 @@
             "name": "(gdb) Launch",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/build/sbin/nginx",
+            "program": "${env:HOME}/nginx/sbin/nginx",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}/build/",
