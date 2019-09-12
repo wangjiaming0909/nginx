@@ -9,7 +9,7 @@
         "name": "(gdb) Attach",
         "type": "cppdbg",
         "request": "attach",
-        "program": "~/nginx/sbin/nginx",
+        "program": "${env:HOME}/nginx/sbin/nginx",
         "processId": "${command:pickProcess}",
         "MIMode": "gdb",
         "setupCommands": [

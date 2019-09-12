@@ -213,7 +213,7 @@ ngx_init_cycle(ngx_cycle_t *old_cycle)
     ngx_strlow(cycle->hostname.data, (u_char *) hostname, cycle->hostname.len);
 
 
-    if (ngx_cycle_modules(cycle) != NGX_OK) {
+    if (ngx_cycle_modules(cycle) != NGX_OK) {//copy all modules from static variable ngx_modules
         ngx_destroy_pool(pool);
         return NULL;
     }
@@ -224,10 +224,10 @@ ngx_init_cycle(ngx_cycle_t *old_cycle)
             continue;
         }
 
-        module = cycle->modules[i]->ctx;
+        module = cycle->modules[i]->ctx;//get core module's context (ngx_core_module_t)
 
         if (module->create_conf) {
-            rv = module->create_conf(cycle);
+            rv = module->create_conf(cycle);//create conf one by one
             if (rv == NULL) {
                 ngx_destroy_pool(pool);
                 return NULL;
