@@ -1471,7 +1471,7 @@ ngx_http_process_request_headers(ngx_event_t *rev)
 
             r->http_state = NGX_HTTP_PROCESS_REQUEST_STATE;
 
-            rc = ngx_http_process_request_header(r);
+            rc = ngx_http_process_request_header(r);//
 
             if (rc != NGX_OK) {
                 break;
@@ -1916,7 +1916,7 @@ ngx_http_process_request_header(ngx_http_request_t *r)
         return NGX_ERROR;
     }
 
-    if (r->headers_in.host == NULL && r->http_version > NGX_HTTP_VERSION_10) {
+    if (r->headers_in.host == NULL && r->http_version > NGX_HTTP_VERSION_10) {//HTTP/1.1 必须要有Host头部
         ngx_log_error(NGX_LOG_INFO, r->connection->log, 0,
                    "client sent HTTP/1.1 request without \"Host\" header");
         ngx_http_finalize_request(r, NGX_HTTP_BAD_REQUEST);
@@ -1926,7 +1926,7 @@ ngx_http_process_request_header(ngx_http_request_t *r)
     if (r->headers_in.content_length) {
         r->headers_in.content_length_n =
                             ngx_atoof(r->headers_in.content_length->value.data,
-                                      r->headers_in.content_length->value.len);
+                                      r->headers_in.content_length->value.len);//Content_Length 的值有问题
 
         if (r->headers_in.content_length_n == NGX_ERROR) {
             ngx_log_error(NGX_LOG_INFO, r->connection->log, 0,
@@ -1936,7 +1936,7 @@ ngx_http_process_request_header(ngx_http_request_t *r)
         }
     }
 
-    if (r->method == NGX_HTTP_TRACE) {
+    if (r->method == NGX_HTTP_TRACE) {//TRACE method
         ngx_log_error(NGX_LOG_INFO, r->connection->log, 0,
                       "client sent TRACE method");
         ngx_http_finalize_request(r, NGX_HTTP_NOT_ALLOWED);

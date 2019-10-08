@@ -600,7 +600,7 @@ ngx_http_get_indexed_variable(ngx_http_request_t *r, ngx_uint_t index)
         return NULL;
     }
 
-    if (r->variables[index].not_found || r->variables[index].valid) {
+    if (r->variables[index].not_found || r->variables[index].valid) {//if request has already has this variable
         return &r->variables[index];
     }
 
@@ -615,7 +615,7 @@ ngx_http_get_indexed_variable(ngx_http_request_t *r, ngx_uint_t index)
 
     ngx_http_variable_depth--;
 
-    if (v[index].get_handler(r, &r->variables[index], v[index].data)
+    if (v[index].get_handler(r, &r->variables[index], v[index].data)//get the variable with the {get_handler} method
         == NGX_OK)
     {
         ngx_http_variable_depth++;
@@ -787,14 +787,14 @@ ngx_http_variable_request_get_size(ngx_http_request_t *r,
     return NGX_OK;
 }
 
-
+//this method was linked by header variables, see ngx_http_variables.c
 static ngx_int_t
 ngx_http_variable_header(ngx_http_request_t *r, ngx_http_variable_value_t *v,
     uintptr_t data)
 {
     ngx_table_elt_t  *h;
 
-    h = *(ngx_table_elt_t **) ((char *) r + data);
+    h = *(ngx_table_elt_t **) ((char *) r + data);//data field is the offset of this variable in ngx_http_request_t
 
     if (h) {
         v->len = h->value.len;
