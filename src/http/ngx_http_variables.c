@@ -484,19 +484,19 @@ ngx_http_add_prefix_variable(ngx_conf_t *cf, ngx_str_t *name, ngx_uint_t flags)
     for (i = 0; i < cmcf->prefix_variables.nelts; i++) {
         if (name->len != v[i].name.len
             || ngx_strncasecmp(name->data, v[i].name.data, name->len) != 0)
-        {
+        {// 如果新添加的name 在 当前存在的prefix_variables中不存在就 continue
             continue;
         }
-
+        //如果已经存在了, 
         v = &v[i];
 
-        if (!(v->flags & NGX_HTTP_VAR_CHANGEABLE)) {
+        if (!(v->flags & NGX_HTTP_VAR_CHANGEABLE)) {//不是changable的就系一条错误日志, 因为重复了
             ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                                "the duplicate \"%V\" variable", name);
             return NULL;
         }
 
-        if (!(flags & NGX_HTTP_VAR_WEAK)) {
+        if (!(flags & NGX_HTTP_VAR_WEAK)) {//如果不是一个WEAK 的变量, 
             v->flags &= ~NGX_HTTP_VAR_WEAK;
         }
 
