@@ -169,7 +169,7 @@ ngx_http_rewrite_handler(ngx_http_request_t *r)
         return NGX_HTTP_INTERNAL_SERVER_ERROR;
     }
 
-    e->ip = rlcf->codes->elts;
+    e->ip = rlcf->codes->elts;//{ip} is a ngx_http_script_return_code_t
     e->request = r;
     e->quote = 1;
     e->log = rlcf->log;
