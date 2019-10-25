@@ -1067,11 +1067,11 @@ ngx_http_script_regex_start_code(ngx_http_script_engine_t *e)
     if (code->test) {
         if (code->negative_test) {
             e->sp->len = 0;
-            e->sp->data = (u_char *) "";
+            e->sp->data = (u_char *) "";//empty means false
 
         } else {
             e->sp->len = 1;
-            e->sp->data = (u_char *) "1";
+            e->sp->data = (u_char *) "1";//1 means true
         }
 
         e->sp++;

@@ -227,7 +227,7 @@ ngx_init_cycle(ngx_cycle_t *old_cycle)
         module = cycle->modules[i]->ctx;//get core module's context (ngx_core_module_t)
 
         if (module->create_conf) {
-            rv = module->create_conf(cycle);//create conf one by one
+            rv = module->create_conf(cycle);//create conf one by one, call ngx_core_module_create_conf,
             if (rv == NULL) {
                 ngx_destroy_pool(pool);
                 return NULL;
@@ -283,7 +283,7 @@ ngx_init_cycle(ngx_cycle_t *old_cycle)
                        cycle->conf_file.data);
     }
 
-    for (i = 0; cycle->modules[i]; i++) {
+    for (i = 0; cycle->modules[i]; i++) { //init core module's config, call ngx_core_module_init_conf
         if (cycle->modules[i]->type != NGX_CORE_MODULE) {
             continue;
         }
@@ -291,9 +291,7 @@ ngx_init_cycle(ngx_cycle_t *old_cycle)
         module = cycle->modules[i]->ctx;
 
         if (module->init_conf) {
-            if (module->init_conf(cycle,
-                                  cycle->conf_ctx[cycle->modules[i]->index])
-                == NGX_CONF_ERROR)
+            if (module->init_conf(cycle, cycle->conf_ctx[cycle->modules[i]->index]) == NGX_CONF_ERROR)
             {
                 environ = senv;
                 ngx_destroy_cycle_pools(&conf);

@@ -484,19 +484,19 @@ ngx_http_add_prefix_variable(ngx_conf_t *cf, ngx_str_t *name, ngx_uint_t flags)
     for (i = 0; i < cmcf->prefix_variables.nelts; i++) {
         if (name->len != v[i].name.len
             || ngx_strncasecmp(name->data, v[i].name.data, name->len) != 0)
-        {
+        {// 如果新添加的name 在 当前存在的prefix_variables中不存在就 continue
             continue;
         }
-
+        //如果已经存在了, 
         v = &v[i];
 
-        if (!(v->flags & NGX_HTTP_VAR_CHANGEABLE)) {
+        if (!(v->flags & NGX_HTTP_VAR_CHANGEABLE)) {//不是changable的就系一条错误日志, 因为重复了
             ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                                "the duplicate \"%V\" variable", name);
             return NULL;
         }
 
-        if (!(flags & NGX_HTTP_VAR_WEAK)) {
+        if (!(flags & NGX_HTTP_VAR_WEAK)) {//如果不是一个WEAK 的变量, 
             v->flags &= ~NGX_HTTP_VAR_WEAK;
         }
 
@@ -600,7 +600,7 @@ ngx_http_get_indexed_variable(ngx_http_request_t *r, ngx_uint_t index)
         return NULL;
     }
 
-    if (r->variables[index].not_found || r->variables[index].valid) {
+    if (r->variables[index].not_found || r->variables[index].valid) {//if request has already has this variable
         return &r->variables[index];
     }
 
@@ -615,7 +615,7 @@ ngx_http_get_indexed_variable(ngx_http_request_t *r, ngx_uint_t index)
 
     ngx_http_variable_depth--;
 
-    if (v[index].get_handler(r, &r->variables[index], v[index].data)
+    if (v[index].get_handler(r, &r->variables[index], v[index].data)//get the variable with the {get_handler} method
         == NGX_OK)
     {
         ngx_http_variable_depth++;
@@ -787,14 +787,14 @@ ngx_http_variable_request_get_size(ngx_http_request_t *r,
     return NGX_OK;
 }
 
-
+//this method was linked by header variables, see ngx_http_variables.c
 static ngx_int_t
 ngx_http_variable_header(ngx_http_request_t *r, ngx_http_variable_value_t *v,
     uintptr_t data)
 {
     ngx_table_elt_t  *h;
 
-    h = *(ngx_table_elt_t **) ((char *) r + data);
+    h = *(ngx_table_elt_t **) ((char *) r + data);//data field is the offset of this variable in ngx_http_request_t
 
     if (h) {
         v->len = h->value.len;

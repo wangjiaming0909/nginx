@@ -552,7 +552,7 @@ ngx_http_rewrite_if(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
         return NGX_CONF_ERROR;
     }
 
-    for (i = 0; cf->cycle->modules[i]; i++) {
+    for (i = 0; cf->cycle->modules[i]; i++) {//遍历所有的http module, 创建 location conf
         if (cf->cycle->modules[i]->type != NGX_HTTP_MODULE) {
             continue;
         }
@@ -561,7 +561,7 @@ ngx_http_rewrite_if(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
 
         if (module->create_loc_conf) {
 
-            mconf = module->create_loc_conf(cf);
+            mconf = module->create_loc_conf(cf);//其实再 函数 ngx_http_block 中所有的http模块已经初始化了, 不知道为什么还要初始化一次
             if (mconf == NULL) {
                 return NGX_CONF_ERROR;
             }

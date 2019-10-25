@@ -246,7 +246,7 @@ ngx_http_block(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
      */
 
     cmcf = ctx->main_conf[ngx_http_core_module.ctx_index];
-    cscfp = cmcf->servers.elts;
+    cscfp = cmcf->servers.elts; //ngx_http_core_srv_conf_t 的数组, 这个server是在ngx_http_core_server中被添加的, ngx_http_core_server会在解析配置文件时, 读取到server块时调用
 
     for (m = 0; cf->cycle->modules[m]; m++) {
         if (cf->cycle->modules[m]->type != NGX_HTTP_MODULE) {
@@ -1137,9 +1137,7 @@ inclusive:
 }
 
 
-ngx_int_t
-ngx_http_add_listen(ngx_conf_t *cf, ngx_http_core_srv_conf_t *cscf,
-    ngx_http_listen_opt_t *lsopt)
+ngx_int_t ngx_http_add_listen(ngx_conf_t *cf, ngx_http_core_srv_conf_t *cscf, ngx_http_listen_opt_t *lsopt)
 {
     in_port_t                   p;
     ngx_uint_t                  i;
@@ -1187,9 +1185,11 @@ ngx_http_add_listen(ngx_conf_t *cf, ngx_http_core_srv_conf_t *cscf,
 }
 
 
-static ngx_int_t
-ngx_http_add_addresses(ngx_conf_t *cf, ngx_http_core_srv_conf_t *cscf,
-    ngx_http_conf_port_t *port, ngx_http_listen_opt_t *lsopt)
+static ngx_int_t ngx_http_add_addresses(
+            ngx_conf_t *cf, 
+            ngx_http_core_srv_conf_t *cscf, 
+            ngx_http_conf_port_t *port, 
+            ngx_http_listen_opt_t *lsopt)
 {
     ngx_uint_t             i, default_server, proxy_protocol;
     ngx_http_conf_addr_t  *addr;
@@ -1336,9 +1336,7 @@ ngx_http_add_address(ngx_conf_t *cf, ngx_http_core_srv_conf_t *cscf,
 
 /* add the server core module configuration to the address:port */
 
-static ngx_int_t
-ngx_http_add_server(ngx_conf_t *cf, ngx_http_core_srv_conf_t *cscf,
-    ngx_http_conf_addr_t *addr)
+static ngx_int_t ngx_http_add_server(ngx_conf_t *cf, ngx_http_core_srv_conf_t *cscf, ngx_http_conf_addr_t *addr)
 {
     ngx_uint_t                  i;
     ngx_http_core_srv_conf_t  **server;
