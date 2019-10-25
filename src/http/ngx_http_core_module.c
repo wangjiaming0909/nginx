@@ -2781,7 +2781,7 @@ ngx_http_core_server(ngx_conf_t *cf, ngx_command_t *cmd, void *dummy)
 
     cmcf = ctx->main_conf[ngx_http_core_module.ctx_index];
 
-    cscfp = ngx_array_push(&cmcf->servers);
+    cscfp = ngx_array_push(&cmcf->servers);//http块下的每个server块都会被添加到core module的servers中
     if (cscfp == NULL) {
         return NGX_CONF_ERROR;
     }
