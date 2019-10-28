@@ -1603,7 +1603,7 @@ ngx_http_script_file_code(ngx_http_script_engine_t *e)
     }
 
     if (ngx_open_cached_file(clcf->open_file_cache, &path, &of, r->pool)
-        != NGX_OK)
+        != NGX_OK)//尝试打开文件
     {
         if (of.err == 0) {
             e->ip = ngx_http_script_exit;
@@ -1619,7 +1619,7 @@ ngx_http_script_file_code(ngx_http_script_engine_t *e)
                           "%s \"%s\" failed", of.failed, value->data);
         }
 
-        switch (code->op) {
+        switch (code->op) {//如此文件根本及不存在, 判断是否是文件, 是否是目录是否存在等都返回false
 
         case ngx_http_script_file_plain:
         case ngx_http_script_file_dir:
@@ -1627,7 +1627,7 @@ ngx_http_script_file_code(ngx_http_script_engine_t *e)
         case ngx_http_script_file_exec:
              goto false_value;
 
-        case ngx_http_script_file_not_plain:
+        case ngx_http_script_file_not_plain://如此文件不存在,. 判断是否是文件等都返回true
         case ngx_http_script_file_not_dir:
         case ngx_http_script_file_not_exists:
         case ngx_http_script_file_not_exec:
