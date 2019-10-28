@@ -133,8 +133,8 @@ ngx_http_block(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
     }
 
     /* the main http context */
-
-    ctx = ngx_pcalloc(cf->pool, sizeof(ngx_http_conf_ctx_t));
+    //此ctx中存储所有http module的三种config, main, server, location(如果这个http module分别定义对应的create函数)
+    ctx = ngx_pcalloc(cf->pool, sizeof(ngx_http_conf_ctx_t));//此ctx作为解析http块内所有配置项时的一个context
     if (ctx == NULL) {
         return NGX_CONF_ERROR;
     }

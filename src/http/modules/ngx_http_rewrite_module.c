@@ -570,14 +570,14 @@ ngx_http_rewrite_if(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
         }
     }
 
-    pclcf = pctx->loc_conf[ngx_http_core_module.ctx_index];
+    pclcf = pctx->loc_conf[ngx_http_core_module.ctx_index];//取到http块下的http core module的loc conf
 
-    clcf = ctx->loc_conf[ngx_http_core_module.ctx_index];
+    clcf = ctx->loc_conf[ngx_http_core_module.ctx_index];//取到刚刚创建的http core module的loc conf
     clcf->loc_conf = ctx->loc_conf;
     clcf->name = pclcf->name;
     clcf->noname = 1;
 
-    if (ngx_http_add_location(cf, &pclcf->locations, clcf) != NGX_OK) {
+    if (ngx_http_add_location(cf, &pclcf->locations, clcf) != NGX_OK) {//add a location conf into http block's loc conf
         return NGX_CONF_ERROR;
     }
 

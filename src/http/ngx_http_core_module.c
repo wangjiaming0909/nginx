@@ -2778,15 +2778,15 @@ ngx_http_core_server(ngx_conf_t *cf, ngx_command_t *cmd, void *dummy)
     cscf = ctx->srv_conf[ngx_http_core_module.ctx_index];
     cscf->ctx = ctx;
 
-
-    cmcf = ctx->main_conf[ngx_http_core_module.ctx_index];
+    //就是cf->ctx->main_conf
+    cmcf = ctx->main_conf[ngx_http_core_module.ctx_index];//main_conf是ngx_conf_t中的那个main_conf
 
     cscfp = ngx_array_push(&cmcf->servers);//http块下的每个server块都会被添加到core module的servers中
     if (cscfp == NULL) {
         return NGX_CONF_ERROR;
     }
 
-    *cscfp = cscf;
+    *cscfp = cscf;//把当前创建的server conf 数组放到 cmcf 中
 
 
     /* parse inside server{} */
@@ -2799,7 +2799,7 @@ ngx_http_core_server(ngx_conf_t *cf, ngx_command_t *cmd, void *dummy)
 
     *cf = pcf;
 
-    if (rv == NGX_CONF_OK && !cscf->listen) {
+    if (rv == NGX_CONF_OK && !cscf->listen) {//如果没有listen指令, 那么会创建一个默认的listen
         ngx_memzero(&lsopt, sizeof(ngx_http_listen_opt_t));
 
         p = ngx_pcalloc(cf->pool, sizeof(struct sockaddr_in));
@@ -2815,7 +2815,7 @@ ngx_http_core_server(ngx_conf_t *cf, ngx_command_t *cmd, void *dummy)
 #if (NGX_WIN32)
         sin->sin_port = htons(80);
 #else
-        sin->sin_port = htons((getuid() == 0) ? 80 : 8000);
+        sin->sin_port = htons((getuid() == 0) ? 80 : 8000);//根据用户创建80或者8000端口
 #endif
         sin->sin_addr.s_addr = INADDR_ANY;
 
