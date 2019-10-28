@@ -577,11 +577,11 @@ ngx_http_rewrite_if(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
     clcf->name = pclcf->name;
     clcf->noname = 1;
 
-    if (ngx_http_add_location(cf, &pclcf->locations, clcf) != NGX_OK) {//add a location conf into http block's loc conf
+    if (ngx_http_add_location(cf, &pclcf->locations, clcf) != NGX_OK) {//处理if为什么要添加一个location呢?
         return NGX_CONF_ERROR;
     }
 
-    if (ngx_http_rewrite_if_condition(cf, lcf) != NGX_CONF_OK) {
+    if (ngx_http_rewrite_if_condition(cf, lcf) != NGX_CONF_OK) {//开始处理if的条件
         return NGX_CONF_ERROR;
     }
 
@@ -613,7 +613,7 @@ ngx_http_rewrite_if(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
         cf->cmd_type = NGX_HTTP_LIF_CONF;
     }
 
-    rv = ngx_conf_parse(cf, NULL);
+    rv = ngx_conf_parse(cf, NULL);//继续解析if块下的配置项
 
     *cf = save;
 
